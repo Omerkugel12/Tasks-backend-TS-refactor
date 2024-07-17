@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+import mongoose, { model, Schema } from "mongoose";
+import { IActivity } from "../types/activityTypes";
 
-const activitySchema = new mongoose.Schema(
+const activitySchema = new Schema<IActivity>(
   {
     operation: { type: String, required: true },
     description: { type: String, required: true },
@@ -9,5 +10,5 @@ const activitySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Activity = mongoose.model("Activity", activitySchema);
-module.exports = Activity;
+const Activity = model<IActivity>("Activity", activitySchema);
+export default Activity;

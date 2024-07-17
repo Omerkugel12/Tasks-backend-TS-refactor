@@ -1,5 +1,5 @@
-const Activity = require("../models/activity.model");
-const User = require("../models/user.model");
+import Activity from "../models/activity.model";
+import User from "../models/user.model";
 
 async function getActivities(req, res) {
   try {

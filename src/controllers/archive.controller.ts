@@ -1,5 +1,5 @@
 const Archive = require("../models/archive.model");
-const User = require("../models/user.model");
+import User from "../models/user.model";
 
 async function getArchives(req, res) {
   try {

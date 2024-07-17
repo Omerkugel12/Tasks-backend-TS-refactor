@@ -1,7 +1,11 @@
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
+import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 
-function verifyToken(req, res, next) {
+interface decodedToken {
+  userId: string;
+}
+
+function verifyToken(req: Request, res: Response, next: NextFunction) {
   // Get token from header, the client should be responsible for sending the token
   const token =
     req.header("Authorization").split(" ")[1] ||
@@ -9,7 +13,7 @@ function verifyToken(req, res, next) {
   if (!token) return res.status(401).json({ error: "Access denied" });
 
   try {
-    const decoded = jwt.verify(token, "mySecret"); // Verify token
+    const decoded = jwt.verify(token, "mySecret") as decodedToken; // Verify token
     req.userId = decoded.userId; // Add userId to request object
     next(); // Call next middleware
   } catch (error) {

@@ -1,11 +1,12 @@
-const mongoose = require("mongoose");
+import mongoose, { model, Schema } from "mongoose";
+import { ITask, ITodo } from "../types/taskTypes";
 
-const todoSchema = new mongoose.Schema({
+const todoSchema = new Schema<ITodo>({
   title: { type: String, required: true },
   isComplete: { type: Boolean, default: false },
 });
 
-const taskSchema = new mongoose.Schema({
+const taskSchema = new Schema<ITask>({
   title: { type: String, required: true },
   description: { type: String, required: true },
   body: { type: String, required: true },
@@ -14,5 +15,5 @@ const taskSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
-const Task = mongoose.model("Task", taskSchema);
-module.exports = Task;
+const Task = model<ITask>("Task", taskSchema);
+export default Task;

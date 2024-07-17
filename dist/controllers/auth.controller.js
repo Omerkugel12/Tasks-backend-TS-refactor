@@ -1,5 +1,9 @@
 "use strict";
-const User = require("../models/user.model");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const user_model_1 = __importDefault(require("../models/user.model"));
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
@@ -7,12 +11,12 @@ const SALT_ROUNDS = 10;
 async function register(req, res) {
     try {
         const { username, password, ...rest } = req.body;
-        const existingUser = await User.findOne({ username }); // Use findOne to check if the user exists
+        const existingUser = await user_model_1.default.findOne({ username }); // Use findOne to check if the user exists
         if (existingUser) {
             return res.status(400).json({ error: "User already exists" });
         }
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS); // Hash password
-        const user = new User({
+        const user = new user_model_1.default({
             username,
             password: hashedPassword,
             ...rest,
@@ -33,7 +37,7 @@ async function register(req, res) {
 async function login(req, res) {
     try {
         const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const user = await user_model_1.default.findOne({ username });
         if (!user) {
             return res.status(401).json({ error: "Authentication failed" });
         }

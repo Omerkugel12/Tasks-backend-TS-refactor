@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const Archive = require("../models/archive.model");
-const User = require("../models/user.model");
+const user_model_1 = __importDefault(require("../models/user.model"));
 async function getArchives(req, res) {
     try {
         const archives = await Archive.find({ user: req.userId });
@@ -17,7 +21,7 @@ async function createArchive(req, res) {
         const newArchive = new Archive(req.body);
         newArchive.user = req.userId;
         const savedArchive = await newArchive.save();
-        await User.findByIdAndUpdate(req.userId, {
+        await user_model_1.default.findByIdAndUpdate(req.userId, {
             $push: { archive: savedArchive._id },
         });
         res.status(201).json(savedArchive);
@@ -43,7 +47,7 @@ async function deleteArchive(req, res) {
             console.log(`archive.controller, deleteArchive. archive not found with id: ${archiveId}`);
             return res.status(404).json({ message: "Archive not found" });
         }
-        await User.findByIdAndUpdate(req.userId, {
+        await user_model_1.default.findByIdAndUpdate(req.userId, {
             $pull: { archive: archiveId }, // Remove the task id from the user's products array
         });
         res.status(200).json({ message: "Archive deleted" });

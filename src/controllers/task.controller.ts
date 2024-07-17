@@ -1,5 +1,5 @@
 const Task = require("../models/task.model");
-const User = require("../models/user.model");
+import User from "../models/user.model";
 
 async function getTasksCount(req, res) {
   try {

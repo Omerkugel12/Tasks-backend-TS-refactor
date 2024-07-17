@@ -1,9 +1,13 @@
 "use strict";
-const Activity = require("../models/activity.model");
-const User = require("../models/user.model");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const activity_model_1 = __importDefault(require("../models/activity.model"));
+const user_model_1 = __importDefault(require("../models/user.model"));
 async function getActivities(req, res) {
     try {
-        const activities = await Activity.find({ user: req.userId });
+        const activities = await activity_model_1.default.find({ user: req.userId });
         res.status(200).json(activities);
     }
     catch (error) {
@@ -14,10 +18,10 @@ async function getActivities(req, res) {
 }
 async function postActivity(req, res) {
     try {
-        const newActivity = new Activity(req.body);
+        const newActivity = new activity_model_1.default(req.body);
         newActivity.user = req.userId;
         const savedActivity = await newActivity.save();
-        await User.findByIdAndUpdate(req.userId, {
+        await user_model_1.default.findByIdAndUpdate(req.userId, {
             $push: { activity: savedActivity._id },
         });
         res.status(200).json(savedActivity);

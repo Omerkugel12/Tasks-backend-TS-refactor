@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const Task = require("../models/task.model");
-const User = require("../models/user.model");
+const user_model_1 = __importDefault(require("../models/user.model"));
 async function getTasksCount(req, res) {
     try {
         const count = await Task.countDocuments({ user: req.userId });
@@ -55,7 +59,7 @@ async function deleteTask(req, res) {
             return res.status(404).json({ message: "Task not found" });
         }
         // Update the user's task array
-        await User.findByIdAndUpdate(req.userId, {
+        await user_model_1.default.findByIdAndUpdate(req.userId, {
             $pull: { tasks: taskId }, // Remove the task id from the user's products array
         });
         res.status(200).json({ message: "Task deleted" });
@@ -71,7 +75,7 @@ async function createTask(req, res) {
         const newTask = new Task(req.body);
         newTask.user = req.userId;
         const savedTask = await newTask.save();
-        await User.findByIdAndUpdate(req.userId, {
+        await user_model_1.default.findByIdAndUpdate(req.userId, {
             $push: { tasks: savedTask._id },
         });
         res.status(201).json(savedTask);

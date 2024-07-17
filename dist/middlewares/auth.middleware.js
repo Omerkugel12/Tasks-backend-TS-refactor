@@ -1,6 +1,9 @@
 "use strict";
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 function verifyToken(req, res, next) {
     // Get token from header, the client should be responsible for sending the token
     const token = req.header("Authorization").split(" ")[1] ||
@@ -8,7 +11,7 @@ function verifyToken(req, res, next) {
     if (!token)
         return res.status(401).json({ error: "Access denied" });
     try {
-        const decoded = jwt.verify(token, "mySecret"); // Verify token
+        const decoded = jsonwebtoken_1.default.verify(token, "mySecret"); // Verify token
         req.userId = decoded.userId; // Add userId to request object
         next(); // Call next middleware
     }

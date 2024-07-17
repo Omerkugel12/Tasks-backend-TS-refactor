@@ -1,8 +1,12 @@
 "use strict";
-const User = require("../models/user.model");
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const user_model_1 = __importDefault(require("../models/user.model"));
 async function getUserById(req, res) {
     try {
-        const user = await User.findById(req.userId);
+        const user = await user_model_1.default.findById(req.userId);
         const { password, ...userWithoutPassword } = user._doc;
         res.status(200).json(userWithoutPassword);
     }
