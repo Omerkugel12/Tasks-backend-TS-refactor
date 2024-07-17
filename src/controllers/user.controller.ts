@@ -5,6 +5,13 @@ import { CustomRequest } from "../types/userTypes";
 export async function getUserById(req: CustomRequest, res: Response) {
   try {
     const user = await User.findById(req.userId);
+    if (!user) {
+      console.log(
+        "user.controller, getUserById. User not found with id: ${req.userId}"
+      );
+      return res.status(404).json({ message: "user not found" });
+    }
+
     const { password, ...userWithoutPassword } = user._doc;
     res.status(200).json(userWithoutPassword);
   } catch (error: any) {

@@ -8,6 +8,10 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 async function getUserById(req, res) {
     try {
         const user = await user_model_1.default.findById(req.userId);
+        if (!user) {
+            console.log("user.controller, getUserById. User not found with id: ${req.userId}");
+            return res.status(404).json({ message: "user not found" });
+        }
         const { password, ...userWithoutPassword } = user._doc;
         res.status(200).json(userWithoutPassword);
     }

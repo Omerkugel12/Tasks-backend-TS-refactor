@@ -10,6 +10,7 @@ export interface IUser {
   tasks: string[];
   archive: string[];
   activity: string[];
+  _doc: any;
 }
 
 export interface CustomRequest extends Request {
