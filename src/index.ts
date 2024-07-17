@@ -1,11 +1,16 @@
 import express, { Application } from "express";
 const app: Application = express();
-const path = require("path");
+import path from "path";
 const PORT = process.env.PORT || 3000;
-const cors = require("cors");
-const dotenv = require("dotenv");
-const { verifyToken } = require("./middlewares/auth.middleware");
-//drdrf
+import cors from "cors";
+import dotenv from "dotenv";
+import { verifyToken } from "./middlewares/auth.middleware";
+import authRoutes from "./routes/auth.route";
+import userRoutes from "./routes/user.route";
+import taskRoutes from "./routes/task.route";
+import activityRoutes from "./routes/activity.route";
+import archiveRoutes from "./routes/archive.route";
+
 const connectDB = require("./config/db");
 
 dotenv.config();
@@ -20,11 +25,6 @@ async function main() {
   app.use(cors());
 
   //ROUTES
-  const authRoutes = require("./routes/auth.route");
-  const userRoutes = require("./routes/user.route");
-  const taskRoutes = require("./routes/task.route");
-  const activityRoutes = require("./routes/activity.route");
-  const archiveRoutes = require("./routes/archive.route");
 
   app.use("/api/auth", authRoutes);
   app.use("/api/user", verifyToken, userRoutes);

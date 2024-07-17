@@ -1,11 +1,12 @@
-import express from "express";
-const router = express.Router();
-const {
+import { Router } from "express";
+import {
   getActivities,
   postActivity,
-} = require("../controllers/activity.controller");
+} from "../controllers/activity.controller";
+
+const router = Router();
 
 router.get("/", getActivities);
 router.post("/", postActivity);
 
-module.exports = router;
+export default router;

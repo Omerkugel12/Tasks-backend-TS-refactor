@@ -3,22 +3,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Archive = require("../models/archive.model");
+exports.getArchives = getArchives;
+exports.createArchive = createArchive;
+exports.deleteArchive = deleteArchive;
+const archive_model_1 = __importDefault(require("../models/archive.model"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 async function getArchives(req, res) {
     try {
-        const archives = await Archive.find({ user: req.userId });
+        const archives = await archive_model_1.default.find({ user: req.userId });
         res.status(200).json(archives);
     }
     catch (error) {
         console.log(error);
-        console.log("archive.controller, getArchive. Error while getting activities");
+        console.log("archive.controller, getArchive. Error while getting archives");
         res.status(500).json({ mesagge: error.mesagge });
     }
 }
 async function createArchive(req, res) {
     try {
-        const newArchive = new Archive(req.body);
+        const newArchive = new archive_model_1.default(req.body);
         newArchive.user = req.userId;
         const savedArchive = await newArchive.save();
         await user_model_1.default.findByIdAndUpdate(req.userId, {
@@ -39,7 +42,7 @@ async function createArchive(req, res) {
 async function deleteArchive(req, res) {
     const { archiveId } = req.params;
     try {
-        const deletedArchive = await Archive.findOneAndDelete({
+        const deletedArchive = await archive_model_1.default.findOneAndDelete({
             _id: archiveId,
             user: req.userId,
         });
@@ -58,4 +61,3 @@ async function deleteArchive(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-module.exports = { getArchives, createArchive, deleteArchive };

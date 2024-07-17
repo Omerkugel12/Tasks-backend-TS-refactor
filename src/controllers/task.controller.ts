@@ -1,33 +1,33 @@
-const Task = require("../models/task.model");
+import Task from "../models/task.model";
 import User from "../models/user.model";
+import { Response } from "express";
+import { CustomRequest } from "../types/userTypes";
 
-async function getTasksCount(req, res) {
-  try {
-    const count = await Task.countDocuments({ user: req.userId });
-    res.status(200).json(count);
-  } catch (error) {
-    console.log(error);
-    console.log(
-      "task.controller, getTasksCount. Error while getting tasks count"
-    );
-    res.status(500).json({ mesagge: error.mesagge });
-  }
-}
+// export const getTasksCount = async (req: CustomRequest, res: Response) => {
+//   try {
+//     const count = await Task.countDocuments({ user: req.userId });
+//     res.status(200).json(count);
+//   } catch (error: any) {
+//     console.log(error);
+//     console.log(
+//       "task.controller, getTasksCount. Error while getting tasks count"
+//     );
+//     res.status(500).json({ mesagge: error.mesagge });
+//   }
+// };
 
-async function getTasks(req, res) {
+export async function getTasks(req: CustomRequest, res: Response) {
   try {
     const tasks = await Task.find({ user: req.userId });
     res.status(200).json(tasks);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    console.log(
-      "task.controller, getTasksCount. Error while getting tasks count"
-    );
+    console.log("task.controller, getTasks. Error while getting tasks");
     res.status(500).json({ mesagge: error.mesagge });
   }
 }
 
-async function getTaskById(req, res) {
+export async function getTaskById(req: CustomRequest, res: Response) {
   const { taskId } = req.params;
   try {
     const task = await Task.findOne({ _id: taskId, user: req.userId });
@@ -38,7 +38,7 @@ async function getTaskById(req, res) {
       return res.status(404).json({ message: "Product not found" });
     }
     res.status(200).json(task);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     if (error.name === "CastError") {
       console.log(
@@ -54,7 +54,7 @@ async function getTaskById(req, res) {
   }
 }
 
-async function deleteTask(req, res) {
+export async function deleteTask(req: CustomRequest, res: Response) {
   const { taskId } = req.params;
 
   try {
@@ -74,7 +74,7 @@ async function deleteTask(req, res) {
       $pull: { tasks: taskId }, // Remove the task id from the user's products array
     });
     res.status(200).json({ message: "Task deleted" });
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     console.log(
       `tasks-controller, deleteTask. Error while deleting task with id: ${taskId}`
@@ -83,7 +83,7 @@ async function deleteTask(req, res) {
   }
 }
 
-async function createTask(req, res) {
+export async function createTask(req: CustomRequest, res: Response) {
   try {
     const newTask = new Task(req.body);
     newTask.user = req.userId;
@@ -94,7 +94,7 @@ async function createTask(req, res) {
     });
 
     res.status(201).json(savedTask);
-  } catch (error) {
+  } catch (error: any) {
     if (error.name === "ValidationError") {
       console.log(`task.controller, addTask. ${error.mesage} `);
       return res.status(400).json({ message: error.mesage });
@@ -105,7 +105,7 @@ async function createTask(req, res) {
   }
 }
 
-async function editTask(req, res) {
+export async function editTask(req: CustomRequest, res: Response) {
   const { taskId } = req.params;
   try {
     const updatedTask = await Task.findOneAndUpdate(
@@ -127,7 +127,7 @@ async function editTask(req, res) {
       return res.status(404).json({ message: "Task not found" });
     }
     res.status(200).json(updatedTask);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     if (error.name === "ValidationError") {
       console.log(`task.controller, editTask. ${error.mesage} `);
@@ -137,12 +137,3 @@ async function editTask(req, res) {
     res.status(500).json({ message: "Server error while editing Task" });
   }
 }
-
-module.exports = {
-  getTasksCount,
-  getTasks,
-  getTaskById,
-  deleteTask,
-  createTask,
-  editTask,
-};

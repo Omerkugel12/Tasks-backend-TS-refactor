@@ -1,11 +1,13 @@
 import User from "../models/user.model";
+import { Response } from "express";
+import { CustomRequest } from "../types/userTypes";
 
-async function getUserById(req, res) {
+export async function getUserById(req: CustomRequest, res: Response) {
   try {
     const user = await User.findById(req.userId);
     const { password, ...userWithoutPassword } = user._doc;
     res.status(200).json(userWithoutPassword);
-  } catch (error) {
+  } catch (error: any) {
     if (error.name === "CastError") {
       console.log(
         `user.controller, getUserById. User not found with id: ${req.userId}`
@@ -19,5 +21,3 @@ async function getUserById(req, res) {
     res.status(500).json({ message: error.mesagge });
   }
 }
-
-module.exports = { getUserById };

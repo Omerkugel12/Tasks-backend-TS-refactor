@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getUserById = getUserById;
 const user_model_1 = __importDefault(require("../models/user.model"));
 async function getUserById(req, res) {
     try {
@@ -19,4 +20,3 @@ async function getUserById(req, res) {
         res.status(500).json({ message: error.mesagge });
     }
 }
-module.exports = { getUserById };

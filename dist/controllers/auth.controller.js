@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.register = register;
+exports.login = login;
 const user_model_1 = __importDefault(require("../models/user.model"));
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const SALT_ROUNDS = 10;
 async function register(req, res) {
     try {
@@ -15,7 +16,7 @@ async function register(req, res) {
         if (existingUser) {
             return res.status(400).json({ error: "User already exists" });
         }
-        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS); // Hash password
+        const hashedPassword = await bcryptjs_1.default.hash(password, SALT_ROUNDS); // Hash password
         const user = new user_model_1.default({
             username,
             password: hashedPassword,
@@ -23,7 +24,7 @@ async function register(req, res) {
         }); // Create new user object
         await user.save(); // Save user to database
         // Generate JWT token containing user id
-        const token = jwt.sign({ userId: user._id }, "mySecret", {
+        const token = jsonwebtoken_1.default.sign({ userId: user._id }, "mySecret", {
             expiresIn: "1h",
         });
         // Send token in response to the client
@@ -41,13 +42,13 @@ async function login(req, res) {
         if (!user) {
             return res.status(401).json({ error: "Authentication failed" });
         }
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        const isPasswordMatch = await bcryptjs_1.default.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(401).json({ error: "Authentication failed" });
         }
         // console.log(password, user.password);
         // Generate JWT token containing user id
-        const token = jwt.sign({ userId: user._id }, "mySecret", {
+        const token = jsonwebtoken_1.default.sign({ userId: user._id }, "mySecret", {
             expiresIn: "1h",
         });
         // Send token in response to the client, not the user object!
@@ -58,4 +59,3 @@ async function login(req, res) {
         res.status(500).json({ error: "Login failed" });
     }
 }
-module.exports = { register, login };

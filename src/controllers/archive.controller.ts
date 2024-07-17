@@ -1,19 +1,19 @@
-const Archive = require("../models/archive.model");
+import Archive from "../models/archive.model";
 import User from "../models/user.model";
+import { Response } from "express";
+import { CustomRequest } from "../types/userTypes";
 
-async function getArchives(req, res) {
+export async function getArchives(req: CustomRequest, res: Response) {
   try {
     const archives = await Archive.find({ user: req.userId });
     res.status(200).json(archives);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    console.log(
-      "archive.controller, getArchive. Error while getting activities"
-    );
+    console.log("archive.controller, getArchive. Error while getting archives");
     res.status(500).json({ mesagge: error.mesagge });
   }
 }
-async function createArchive(req, res) {
+export async function createArchive(req: CustomRequest, res: Response) {
   try {
     const newArchive = new Archive(req.body);
     newArchive.user = req.userId;
@@ -24,7 +24,7 @@ async function createArchive(req, res) {
     });
 
     res.status(201).json(savedArchive);
-  } catch (error) {
+  } catch (error: any) {
     if (error.name === "ValidationError") {
       console.log(`archive.controller, createArchive. ${error.mesage} `);
       return res.status(400).json({ message: error.mesage });
@@ -36,7 +36,7 @@ async function createArchive(req, res) {
     res.status(500).json({ message: "Server error while creating Task" });
   }
 }
-async function deleteArchive(req, res) {
+export async function deleteArchive(req: CustomRequest, res: Response) {
   const { archiveId } = req.params;
   try {
     const deletedArchive = await Archive.findOneAndDelete({
@@ -55,7 +55,7 @@ async function deleteArchive(req, res) {
       $pull: { archive: archiveId }, // Remove the task id from the user's products array
     });
     res.status(200).json({ message: "Archive deleted" });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     console.log(
       `archive.controller, deleteArchive. Error while deleting archive with id: ${archiveId}`
@@ -63,5 +63,3 @@ async function deleteArchive(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
-
-module.exports = { getArchives, createArchive, deleteArchive };

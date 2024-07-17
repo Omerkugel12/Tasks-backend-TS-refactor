@@ -1,8 +1,8 @@
-import { Schema } from "mongoose";
+import { ObjectId } from "mongoose";
 
 export interface IActivity {
   _id: string;
   operation: string;
   description: string;
-  user: Schema.Types.ObjectId;
+  user: ObjectId | string | undefined;
 }

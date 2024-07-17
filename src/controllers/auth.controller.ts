@@ -1,12 +1,11 @@
+import { Request, Response } from "express";
 import User from "../models/user.model";
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
-const { JWT_SECRET } = process.env;
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;
 
-async function register(req, res) {
+export async function register(req: Request, res: Response) {
   try {
     const { username, password, ...rest } = req.body;
 
@@ -30,13 +29,13 @@ async function register(req, res) {
 
     // Send token in response to the client
     res.status(201).json({ message: "User registered successfully", token });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({ error: "Registration failed" });
   }
 }
 
-async function login(req, res) {
+export async function login(req: Request, res: Response) {
   try {
     const { username, password } = req.body;
 
@@ -58,10 +57,8 @@ async function login(req, res) {
 
     // Send token in response to the client, not the user object!
     res.status(200).json({ token });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({ error: "Login failed" });
   }
 }
-
-module.exports = { register, login };

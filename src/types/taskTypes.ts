@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { ObjectId } from "mongoose";
 
 export interface ITask {
   _id: string;
@@ -7,7 +7,7 @@ export interface ITask {
   body: string;
   todoList: ITodo[];
   isPinned: boolean;
-  user: Schema.Types.ObjectId;
+  user: ObjectId | string | undefined;
 }
 export interface ITodo {
   _id: string;

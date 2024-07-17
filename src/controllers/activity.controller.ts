@@ -1,19 +1,22 @@
 import Activity from "../models/activity.model";
 import User from "../models/user.model";
+import { Response } from "express";
+import { CustomRequest } from "../types/userTypes";
 
-async function getActivities(req, res) {
+export const getActivities = async (req: CustomRequest, res: Response) => {
   try {
     const activities = await Activity.find({ user: req.userId });
     res.status(200).json(activities);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     console.log(
       "activity.controller, getActivities. Error while getting activities"
     );
     res.status(500).json({ mesagge: error.mesagge });
   }
-}
-async function postActivity(req, res) {
+};
+
+export const postActivity = async (req: CustomRequest, res: Response) => {
   try {
     const newActivity = new Activity(req.body);
     newActivity.user = req.userId;
@@ -24,7 +27,7 @@ async function postActivity(req, res) {
     });
 
     res.status(200).json(savedActivity);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     if (error.name === "ValidationError") {
       console.log(`activity.controller, postActivity. ${error.mesage} `);
@@ -36,6 +39,4 @@ async function postActivity(req, res) {
     );
     res.status(500).json({ message: "Server error while creating Task" });
   }
-}
-
-module.exports = { getActivities, postActivity };
+};

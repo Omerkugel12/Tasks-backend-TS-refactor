@@ -5,33 +5,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-const path = require("path");
+const path_1 = __importDefault(require("path"));
 const PORT = process.env.PORT || 3000;
-const cors = require("cors");
-const dotenv = require("dotenv");
-const { verifyToken } = require("./middlewares/auth.middleware");
-//drdrf
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const auth_middleware_1 = require("./middlewares/auth.middleware");
+const auth_route_1 = __importDefault(require("./routes/auth.route"));
+const user_route_1 = __importDefault(require("./routes/user.route"));
+const task_route_1 = __importDefault(require("./routes/task.route"));
+const activity_route_1 = __importDefault(require("./routes/activity.route"));
+const archive_route_1 = __importDefault(require("./routes/archive.route"));
 const connectDB = require("./config/db");
-dotenv.config();
+dotenv_1.default.config();
 async function main() {
     await connectDB();
     app.use(express_1.default.static("public"));
     app.use(express_1.default.json());
-    app.use(cors());
+    app.use((0, cors_1.default)());
     //ROUTES
-    const authRoutes = require("./routes/auth.route");
-    const userRoutes = require("./routes/user.route");
-    const taskRoutes = require("./routes/task.route");
-    const activityRoutes = require("./routes/activity.route");
-    const archiveRoutes = require("./routes/archive.route");
-    app.use("/api/auth", authRoutes);
-    app.use("/api/user", verifyToken, userRoutes);
-    app.use("/api/task", verifyToken, taskRoutes);
-    app.use("/api/activity", verifyToken, activityRoutes);
-    app.use("/api/archive", verifyToken, archiveRoutes);
+    app.use("/api/auth", auth_route_1.default);
+    app.use("/api/user", auth_middleware_1.verifyToken, user_route_1.default);
+    app.use("/api/task", auth_middleware_1.verifyToken, task_route_1.default);
+    app.use("/api/activity", auth_middleware_1.verifyToken, activity_route_1.default);
+    app.use("/api/archive", auth_middleware_1.verifyToken, archive_route_1.default);
     // Catch-all route
     app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "public", "index.html"));
+        res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
     });
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
